@@ -179,7 +179,7 @@ places.forEach((p,i)=>{
   const revs = p.reviews ? `<span style="color:#666;font-size:10px;margin-left:2px">(${p.reviews>=1000?(p.reviews/1000).toFixed(1)+'k':p.reviews})</span>` : '';
   div.innerHTML = `<div class="left"><div class="name">${emoji} ${p.name}${stars}${revs}</div><div class="meta"><span class="cuisine-tag" style="background:${color}22;color:${color}">${c}</span>${p.note||p.addr||''}</div></div><div class="dist">🚶 ${walkText}</div>`;
   div.onclick = () => { map.setView([p.lat,p.lng],17); marker.openPopup(); window.scrollTo({top:0,behavior:'smooth'}); };
-  items.push({div,cuisine:c,rating:p.rating||0,origIdx:i});
+  items.push({div,cuisine:c,rating:p.rating||0,reviews:p.reviews||0,origIdx:i});
   document.getElementById('list').appendChild(div);
 });
 
@@ -201,19 +201,31 @@ cuisineList.forEach(c=>{
   filtersEl.appendChild(btn);
 });
 
-// Sort by rating button
-const sortBtn = document.createElement('div');
-sortBtn.className = 'fbtn';
-sortBtn.innerHTML = '⭐ Top Rated';
-let sortedByRating = false;
-sortBtn.onclick = () => {
-  sortedByRating = !sortedByRating;
-  sortBtn.classList.toggle('active', sortedByRating);
-  const listEl = document.getElementById('list');
-  const sorted = [...items].sort((a,b) => sortedByRating ? (b.rating||0)-(a.rating||0) : a.origIdx-b.origIdx);
-  sorted.forEach(i => listEl.appendChild(i.div));
-};
-filtersEl.appendChild(sortBtn);
+// Sort buttons
+let currentSort = 'distance';
+const sortOpts = [
+  {key:'distance',label:'📍 Closest',sort:(a,b)=>a.origIdx-b.origIdx},
+  {key:'rating',label:'⭐ Top Rated',sort:(a,b)=>(b.rating||0)-(a.rating||0)},
+  {key:'reviews',label:'🔥 Most Reviews',sort:(a,b)=>(b.reviews||0)-(a.reviews||0)},
+];
+sortOpts.forEach(s=>{
+  const btn = document.createElement('div');
+  btn.className = 'fbtn' + (s.key==='distance'?' active':'');
+  btn.innerHTML = s.label;
+  btn.dataset.sort = s.key;
+  btn.onclick = () => {
+    currentSort = s.key;
+    document.querySelectorAll('[data-sort]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const listEl = document.getElementById('list');
+    const visible = items.filter(i=>!i.div.classList.contains('hidden'));
+    const hidden = items.filter(i=>i.div.classList.contains('hidden'));
+    visible.sort(s.sort);
+    visible.forEach(i=>listEl.appendChild(i.div));
+    hidden.forEach(i=>listEl.appendChild(i.div));
+  };
+  filtersEl.appendChild(btn);
+});
 
 function setFilter(cuisine){
   activeFilter = cuisine;
