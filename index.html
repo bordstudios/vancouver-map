@@ -59,48 +59,48 @@ const cuisineEmoji = {
 };
 
 const raw = [
-  {name:"Miku",lat:49.2876,lng:-123.1118,cuisine:"sushi",addr:"200 Granville St",note:"World-class aburi sushi. Waterfront. Joel's #1 pick.",rating:4.6,reviews:4200},
-  {name:"Joe Fortes",lat:49.2849,lng:-123.1246,cuisine:"seafood",addr:"777 Thurlow St",hours:"11:00-23:00",note:"Oyster bar. 2 blocks from hotel.",rating:4.4,reviews:3800},
-  {name:"Din Tai Fung",lat:49.2857,lng:-123.1247,cuisine:"taiwanese",addr:"1132 Alberni St",hours:"11:00-15:00, 17:00-20:30",note:"Famous dumplings. Expect a wait.",rating:4.5,reviews:1200},
-  {name:"The Keg",lat:49.2862,lng:-123.1242,cuisine:"steak_house",addr:"1121 Alberni St",hours:"Su-Th 15:00-23:00",note:"Reliable steakhouse.",rating:4.3,reviews:2100},
-  {name:"Guu Original Thurlow",lat:49.2840,lng:-123.1254,cuisine:"japanese",addr:"838 Thurlow St",hours:"11:45-00:30",note:"Japanese izakaya tapas. Fun vibe.",rating:4.3,reviews:1900},
-  {name:"Earls Robson",lat:49.2860,lng:-123.1264,cuisine:"american",addr:"1185 Robson St",hours:"11:00-00:00",note:"Upscale casual. Patio.",rating:4.1,reviews:1600},
-  {name:"Earls Hornby",lat:49.2816,lng:-123.1238,cuisine:"american",addr:"905 Hornby St",hours:"11:30-00:00",rating:4.0,reviews:900},
-  {name:"Joey Burrard",lat:49.2828,lng:-123.1231,cuisine:"regional",addr:"820 Burrard St",hours:"12:00-22:00",note:"Right by the hotel.",rating:4.1,reviews:1400},
-  {name:"Joey Bentall",lat:49.2867,lng:-123.1183,cuisine:"regional",addr:"507 Burrard St",hours:"11:00-00:00",rating:4.2,reviews:1100},
-  {name:"Cactus Club",lat:49.2855,lng:-123.1188,cuisine:"international",addr:"588 Burrard St",note:"Solid casual dining.",rating:4.1,reviews:2200},
-  {name:"Red Robin",lat:49.2845,lng:-123.1253,cuisine:"burger",addr:"803 Thurlow St",hours:"11:00-23:00",rating:3.8,reviews:800},
-  {name:"Ramen Danbo",lat:49.2831,lng:-123.1218,cuisine:"japanese",addr:"Robson St",note:"Legit Fukuoka-style ramen.",rating:4.4,reviews:2600},
-  {name:"Coast Restaurant",lat:49.2847,lng:-123.1231,cuisine:"seafood",addr:"1054 Alberni St",note:"Upscale seafood.",rating:4.3,reviews:1500},
-  {name:"Jang Mo Jib",lat:49.2857,lng:-123.1270,cuisine:"korean",addr:"808 Bute St",hours:"12:00-00:00",note:"Korean BBQ & tapas. Great for groups.",rating:4.0,reviews:700},
-  {name:"Kosoo",lat:49.2891,lng:-123.1326,cuisine:"korean",addr:"832 Cardero St",rating:4.2,reviews:500},
-  {name:"Kingyo Izakaya",lat:49.2847,lng:-123.1309,cuisine:"japanese",addr:"871 Denman St",note:"Japanese tapas, great cocktails.",rating:4.3,reviews:1300},
+  {name:"Miku",lat:49.2876,lng:-123.1118,cuisine:"sushi",addr:"200 Granville St",note:"World-class aburi sushi. Waterfront. Joel's #1 pick.",rating:4.6,reviews:4200,web:"https://mikurestaurant.com"},
+  {name:"Joe Fortes",lat:49.2849,lng:-123.1246,cuisine:"seafood",addr:"777 Thurlow St",hours:"11:00-23:00",note:"Oyster bar. 2 blocks from hotel.",rating:4.4,reviews:3800,web:"https://www.joefortes.ca/"},
+  {name:"Din Tai Fung",lat:49.2857,lng:-123.1247,cuisine:"taiwanese",addr:"1132 Alberni St",hours:"11:00-15:00, 17:00-20:30",note:"Famous dumplings. Expect a wait.",rating:4.5,reviews:1200,web:"https://dtf.com/en/locations/vancouver"},
+  {name:"The Keg",lat:49.2862,lng:-123.1242,cuisine:"steak_house",addr:"1121 Alberni St",hours:"Su-Th 15:00-23:00",note:"Reliable steakhouse.",rating:4.3,reviews:2100,web:"https://thekeg.com/en/locations/alberni"},
+  {name:"Guu Original Thurlow",lat:49.2840,lng:-123.1254,cuisine:"japanese",addr:"838 Thurlow St",hours:"11:45-00:30",note:"Japanese izakaya tapas. Fun vibe.",rating:4.3,reviews:1900,web:"https://guu-izakaya.com/"},
+  {name:"Earls Robson",lat:49.2860,lng:-123.1264,cuisine:"american",addr:"1185 Robson St",hours:"11:00-00:00",note:"Upscale casual. Patio.",rating:4.1,reviews:1600,web:"https://www.earls.ca/locations/robson/"},
+  {name:"Earls Hornby",lat:49.2816,lng:-123.1238,cuisine:"american",addr:"905 Hornby St",hours:"11:30-00:00",rating:4.0,reviews:900,web:"https://www.earls.ca/"},
+  {name:"Joey Burrard",lat:49.2828,lng:-123.1231,cuisine:"regional",addr:"820 Burrard St",hours:"12:00-22:00",note:"Right by the hotel.",rating:4.1,reviews:1400,web:"https://joeyrestaurants.com/"},
+  {name:"Joey Bentall",lat:49.2867,lng:-123.1183,cuisine:"regional",addr:"507 Burrard St",hours:"11:00-00:00",rating:4.2,reviews:1100,web:"https://joeyrestaurants.com/"},
+  {name:"Cactus Club",lat:49.2855,lng:-123.1188,cuisine:"international",addr:"588 Burrard St",note:"Solid casual dining.",rating:4.1,reviews:2200,web:"https://www.cactusclubcafe.com/"},
+  {name:"Red Robin",lat:49.2845,lng:-123.1253,cuisine:"burger",addr:"803 Thurlow St",hours:"11:00-23:00",rating:3.8,reviews:800,web:"https://locations.redrobin.com/bc/vancouver/273"},
+  {name:"Ramen Danbo",lat:49.2831,lng:-123.1218,cuisine:"japanese",addr:"Robson St",note:"Legit Fukuoka-style ramen.",rating:4.4,reviews:2600,web:"https://ramendanbo.com/"},
+  {name:"Coast Restaurant",lat:49.2847,lng:-123.1231,cuisine:"seafood",addr:"1054 Alberni St",note:"Upscale seafood.",rating:4.3,reviews:1500,web:"https://www.glowbalgroup.com/coast/"},
+  {name:"Jang Mo Jib",lat:49.2857,lng:-123.1270,cuisine:"korean",addr:"808 Bute St",hours:"12:00-00:00",note:"Korean BBQ & tapas. Great for groups.",rating:4.0,reviews:700,web:"https://www.jangmojibca.com/"},
+  {name:"Kosoo",lat:49.2891,lng:-123.1326,cuisine:"korean",addr:"832 Cardero St",rating:4.2,reviews:500,web:"https://kosoo.ca/cardero/"},
+  {name:"Kingyo Izakaya",lat:49.2847,lng:-123.1309,cuisine:"japanese",addr:"871 Denman St",note:"Japanese tapas, great cocktails.",rating:4.3,reviews:1300,web:"https://kingyo-izakaya.ca/"},
   {name:"Stepho's Greek",lat:49.2807,lng:-123.1320,cuisine:"greek",addr:"1124 Davie St",hours:"11:30-23:30",note:"Huge portions, cheap. Always a line.",rating:4.1,reviews:3500},
-  {name:"Taki's Taverna",lat:49.2805,lng:-123.1317,cuisine:"greek",addr:"1106 Davie St",rating:4.3,reviews:600},
-  {name:"Thai Basil",lat:49.2803,lng:-123.1316,cuisine:"thai",addr:"1125 Thurlow St",hours:"11:30-21:30",rating:4.0,reviews:500},
-  {name:"Banana Leaf",lat:49.2799,lng:-123.1303,cuisine:"malaysian",addr:"1043 Davie St",hours:"11:30-21:30",note:"Malaysian. Great curries.",rating:4.2,reviews:1800},
+  {name:"Taki's Taverna",lat:49.2805,lng:-123.1317,cuisine:"greek",addr:"1106 Davie St",rating:4.3,reviews:600,web:"https://www.takistaverna.com/"},
+  {name:"Thai Basil",lat:49.2803,lng:-123.1316,cuisine:"thai",addr:"1125 Thurlow St",hours:"11:30-21:30",rating:4.0,reviews:500,web:"http://www.thaibasilvancouver.ca"},
+  {name:"Banana Leaf",lat:49.2799,lng:-123.1303,cuisine:"malaysian",addr:"1043 Davie St",hours:"11:30-21:30",note:"Malaysian. Great curries.",rating:4.2,reviews:1800,web:"https://www.bananaleaf-vancouver.com/"},
   {name:"Samurai Japanese",lat:49.2805,lng:-123.1317,cuisine:"japanese",addr:"1108 Davie St",hours:"11:00-23:00",rating:3.9,reviews:400},
-  {name:"Shizen Ya",lat:49.2809,lng:-123.1246,cuisine:"sushi",addr:"965 Hornby St",hours:"11:30-22:00",note:"Vegan-friendly sushi.",rating:4.2,reviews:600},
-  {name:"Tokyo Joe's",lat:49.2798,lng:-123.1267,cuisine:"sushi",addr:"955 Helmcken St",hours:"11:00-19:00",rating:4.3,reviews:300},
+  {name:"Shizen Ya",lat:49.2809,lng:-123.1246,cuisine:"sushi",addr:"965 Hornby St",hours:"11:30-22:00",note:"Vegan-friendly sushi.",rating:4.2,reviews:600,web:"https://shizenya.ca/"},
+  {name:"Tokyo Joe's",lat:49.2798,lng:-123.1267,cuisine:"sushi",addr:"955 Helmcken St",hours:"11:00-19:00",rating:4.3,reviews:300,web:"https://tokyojoes.ca/"},
   {name:"Sushi Star",lat:49.2795,lng:-123.1238,cuisine:"sushi",addr:"750 Nelson St",hours:"11:30-21:00",rating:3.9,reviews:200},
-  {name:"Guu Toramasa",lat:49.2811,lng:-123.1186,cuisine:"japanese",addr:"757 Seymour St",hours:"11:30-23:00",rating:4.2,reviews:800},
-  {name:"Meat & Bread",lat:49.2872,lng:-123.1189,cuisine:"sandwich",addr:"1033 W Pender St",hours:"11:00-15:00",note:"Famous sandwiches. Quick lunch.",rating:4.5,reviews:1600},
-  {name:"Meat & Bread Robson",lat:49.2810,lng:-123.1190,cuisine:"sandwich",addr:"625 Robson St",hours:"11:00-15:00",rating:4.4,reviews:900},
-  {name:"Nightingale",lat:49.2812,lng:-123.1179,cuisine:"italian",addr:"1017 W Hastings St",note:"Upscale casual. Great pasta. Date night.",rating:4.4,reviews:1800},
-  {name:"Medina Cafe",lat:49.2802,lng:-123.1172,cuisine:"breakfast",addr:"780 Richards St",hours:"08:00-15:00",note:"Best brunch in Vancouver. Go early.",rating:4.4,reviews:3200},
-  {name:"The Basic",lat:49.2798,lng:-123.1299,cuisine:"breakfast",addr:"1031 Davie St",hours:"08:00-15:00",rating:4.3,reviews:700},
-  {name:"Yolks",lat:49.2787,lng:-123.1289,cuisine:"breakfast",addr:"988 Davie St",hours:"08:00-15:00",rating:4.3,reviews:1100},
+  {name:"Guu Toramasa",lat:49.2811,lng:-123.1186,cuisine:"japanese",addr:"757 Seymour St",hours:"11:30-23:00",rating:4.2,reviews:800,web:"https://guu-izakaya.com/Toramasa_QR"},
+  {name:"Meat & Bread",lat:49.2872,lng:-123.1189,cuisine:"sandwich",addr:"1033 W Pender St",hours:"11:00-15:00",note:"Famous sandwiches. Quick lunch.",rating:4.5,reviews:1600,web:"http://meatandbread.ca"},
+  {name:"Meat & Bread Robson",lat:49.2810,lng:-123.1190,cuisine:"sandwich",addr:"625 Robson St",hours:"11:00-15:00",rating:4.4,reviews:900,web:"http://meatandbread.ca"},
+  {name:"Nightingale",lat:49.2812,lng:-123.1179,cuisine:"italian",addr:"1017 W Hastings St",note:"Upscale casual. Great pasta. Date night.",rating:4.4,reviews:1800,web:"https://hawksworthrestaurant.com/nightingale/"},
+  {name:"Medina Cafe",lat:49.2802,lng:-123.1172,cuisine:"breakfast",addr:"780 Richards St",hours:"08:00-15:00",note:"Best brunch in Vancouver. Go early.",rating:4.4,reviews:3200,web:"https://www.medinacafe.com/"},
+  {name:"The Basic",lat:49.2798,lng:-123.1299,cuisine:"breakfast",addr:"1031 Davie St",hours:"08:00-15:00",rating:4.3,reviews:700,web:"https://thebasiceats.com/"},
+  {name:"Yolks",lat:49.2787,lng:-123.1289,cuisine:"breakfast",addr:"988 Davie St",hours:"08:00-15:00",rating:4.3,reviews:1100,web:"https://yolks.ca/"},
   {name:"Pacifico Pizzeria",lat:49.2818,lng:-123.1240,cuisine:"pizza",addr:"970 Smithe St",hours:"11:00-23:00",rating:4.0,reviews:400},
   {name:"Donair Drive",lat:49.2796,lng:-123.1239,cuisine:"middle_eastern",addr:"770 Nelson St",hours:"10:30-02:00",note:"Late night option.",rating:4.1,reviews:300},
   {name:"Jerusalem Shawarma",lat:49.2804,lng:-123.1186,cuisine:"middle_eastern",addr:"560 Robson St",rating:4.0,reviews:350},
   {name:"Aladdin Cafe",lat:49.2810,lng:-123.1189,cuisine:"middle_eastern",addr:"615 Robson St",rating:3.9,reviews:250},
-  {name:"Homer St Cafe",lat:49.2784,lng:-123.1182,cuisine:"italian",addr:"898 Homer St",note:"Great brunch & dinner.",rating:4.3,reviews:1000},
+  {name:"Homer St Cafe",lat:49.2784,lng:-123.1182,cuisine:"italian",addr:"898 Homer St",note:"Great brunch & dinner.",rating:4.3,reviews:1000,web:"https://homerstreetcafebar.com/"},
   {name:"Express Pho",lat:49.2879,lng:-123.1238,cuisine:"pho",addr:"570 Bute St",rating:3.8,reviews:200},
-  {name:"The Templeton",lat:49.2784,lng:-123.1245,cuisine:"american",addr:"1087 Granville St",hours:"08:30-15:00",note:"Retro diner vibes.",rating:4.2,reviews:900},
-  {name:"Taylight",lat:49.2819,lng:-123.1241,cuisine:"turkish",addr:"990 Smithe St",hours:"14:00-00:00",rating:4.1,reviews:300},
+  {name:"The Templeton",lat:49.2784,lng:-123.1245,cuisine:"american",addr:"1087 Granville St",hours:"08:30-15:00",note:"Retro diner vibes.",rating:4.2,reviews:900,web:"http://thetempleton.ca/"},
+  {name:"Taylight",lat:49.2819,lng:-123.1241,cuisine:"turkish",addr:"990 Smithe St",hours:"14:00-00:00",rating:4.1,reviews:300,web:"https://taylightkitchen.com"},
   {name:"Moulin Rouge",lat:49.2792,lng:-123.1227,cuisine:"french",addr:"998 Granville St",rating:3.7,reviews:200},
   {name:"1931 Gallery Bistro",lat:49.2827,lng:-123.1205,cuisine:"regional",addr:"Vancouver Art Gallery",note:"Inside the gallery.",rating:4.0,reviews:150},
-  {name:"Japadog",lat:49.2836,lng:-123.1240,cuisine:"japanese",addr:"Robson & Burrard",note:"Famous Japanese hot dogs. Iconic.",rating:4.2,reviews:2800},
+  {name:"Japadog",lat:49.2836,lng:-123.1240,cuisine:"japanese",addr:"Robson & Burrard",note:"Famous Japanese hot dogs. Iconic.",rating:4.2,reviews:2800,web:"https://www.japadog.com/"},
 ];
 
 function dist(a,b){
@@ -167,6 +167,8 @@ places.forEach((p,i)=>{
   if(p.rating) popup += `<br><span style="font-size:12px;color:#fbbf24">${'★'.repeat(Math.round(p.rating))}${'☆'.repeat(5-Math.round(p.rating))} ${p.rating}/5</span><span style="font-size:11px;color:#888"> (${p.reviews?.toLocaleString()} reviews)</span>`;
   if(p.hours) popup += `<br><span style="font-size:11px">🕐 ${p.hours}</span>`;
   if(p.note) popup += `<br><span style="font-size:12px;color:#f59e0b">⭐ ${p.note}</span>`;
+  const link = p.web || `https://www.google.com/maps/search/${encodeURIComponent(p.name+' Vancouver')}`;
+  popup += `<br><a href="${link}" target="_blank" style="color:#3b82f6;font-size:12px;text-decoration:none">🔗 ${p.web?'Website':'Google Maps'} →</a>`;
   marker.bindPopup(popup);
   markers.push({marker,cuisine:c});
   
@@ -177,7 +179,8 @@ places.forEach((p,i)=>{
   const walkText = walkMin <= 1 ? '1 min' : `${walkMin} min`;
   const stars = p.rating ? `<span style="color:#fbbf24;font-size:12px;margin-left:4px">${p.rating}★</span>` : '';
   const revs = p.reviews ? `<span style="color:#666;font-size:10px;margin-left:2px">(${p.reviews>=1000?(p.reviews/1000).toFixed(1)+'k':p.reviews})</span>` : '';
-  div.innerHTML = `<div class="left"><div class="name">${emoji} ${p.name}${stars}${revs}</div><div class="meta"><span class="cuisine-tag" style="background:${color}22;color:${color}">${c}</span>${p.note||p.addr||''}</div></div><div class="dist">🚶 ${walkText}</div>`;
+  const link = p.web || `https://www.google.com/maps/search/${encodeURIComponent(p.name+' Vancouver')}`;
+  div.innerHTML = `<div class="left"><div class="name">${emoji} <a href="${link}" target="_blank" style="color:#fff;text-decoration:none" onclick="event.stopPropagation()">${p.name}</a>${stars}${revs} <a href="${link}" target="_blank" onclick="event.stopPropagation()" style="color:#3b82f6;font-size:11px;text-decoration:none">↗</a></div><div class="meta"><span class="cuisine-tag" style="background:${color}22;color:${color}">${c}</span>${p.note||p.addr||''}</div></div><div class="dist">🚶 ${walkText}</div>`;
   div.onclick = () => { map.setView([p.lat,p.lng],17); marker.openPopup(); window.scrollTo({top:0,behavior:'smooth'}); };
   items.push({div,cuisine:c,rating:p.rating||0,reviews:p.reviews||0,origIdx:i});
   document.getElementById('list').appendChild(div);
