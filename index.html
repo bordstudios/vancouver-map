@@ -2,107 +2,216 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Joel & Lena — Vancouver Feb 20-22</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Food Near Sutton Place — Vancouver</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0f;color:#fff}
-#map{width:100%;height:60vh}
-.header{padding:16px;background:#111;border-bottom:2px solid #C2000B}
-.header h1{font-size:20px;font-weight:700}
-.header p{font-size:13px;color:#888;margin-top:4px}
-.legend{padding:16px;max-height:40vh;overflow-y:auto}
-.cat{margin-bottom:16px}
-.cat h3{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
-.spot{padding:8px 12px;margin-bottom:6px;background:#1a1a2e;border-radius:8px;font-size:13px;cursor:pointer;border-left:3px solid transparent}
-.spot:hover{background:#222240}
-.spot .name{font-weight:600}
-.spot .desc{color:#aaa;font-size:12px;margin-top:2px}
-.spot[data-cat="hotel"]{border-left-color:#C2000B}
-.spot[data-cat="food"]{border-left-color:#f59e0b}
-.spot[data-cat="sights"]{border-left-color:#3b82f6}
-.spot[data-cat="shop"]{border-left-color:#10b981}
+#map{width:100%;height:55vh}
+.filters{padding:10px 12px;background:#111;display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid #222;position:sticky;top:0;z-index:1000}
+.fbtn{padding:6px 12px;border-radius:20px;border:1px solid #333;background:#1a1a2e;color:#ccc;font-size:12px;cursor:pointer;white-space:nowrap}
+.fbtn.active{background:#C2000B;border-color:#C2000B;color:#fff;font-weight:600}
+.fbtn .count{opacity:0.7;margin-left:4px;font-size:11px}
+.list{padding:8px 12px;max-height:45vh;overflow-y:auto}
+.item{padding:10px 12px;margin-bottom:6px;background:#1a1a2e;border-radius:8px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.item:hover{background:#222240}
+.item.hidden{display:none}
+.item .left{flex:1}
+.item .name{font-size:14px;font-weight:600}
+.item .meta{font-size:11px;color:#888;margin-top:3px}
+.item .cuisine-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:500;margin-right:4px}
+.item .dist{font-size:12px;color:#666;white-space:nowrap;margin-left:12px}
+.header{padding:12px;background:#111;border-bottom:2px solid #C2000B}
+.header h1{font-size:18px}
+.header p{font-size:12px;color:#888;margin-top:2px}
 </style>
 </head>
 <body>
 <div class="header">
-  <h1>🗺️ Joel & Lena — Vancouver</h1>
-  <p>Feb 20–22, 2026 • Sutton Place Hotel</p>
+  <h1>🍽️ Restaurants — 10 min walk</h1>
+  <p>From Sutton Place Hotel, 845 Burrard St</p>
 </div>
 <div id="map"></div>
-<div class="legend" id="legend"></div>
+<div class="filters" id="filters"></div>
+<div class="list" id="list"></div>
 
 <script>
-const places = [
-  // Hotel
-  {name:"Sutton Place Hotel",cat:"hotel",icon:"🏨",lat:49.2827,lng:-123.1257,desc:"Your home base — 845 Burrard St. Check-in 4 PM"},
-  // Food — Joel's picks
-  {name:"Miku Vancouver",cat:"food",icon:"🍣",lat:49.2876,lng:-123.1118,desc:"World-class aburi sushi, waterfront views. THE move for sushi."},
-  {name:"Joe Fortes",cat:"food",icon:"🦪",lat:49.2838,lng:-123.1234,desc:"Seafood & oyster bar. 2 blocks from hotel. Great vibe."},
-  {name:"Ramen Danbo",cat:"food",icon:"🍜",lat:49.2831,lng:-123.1218,desc:"Legit Fukuoka-style ramen on Robson."},
-  {name:"Japadog",cat:"food",icon:"🌭",lat:49.2836,lng:-123.1240,desc:"Famous Japanese hot dogs. Quick, cheap, iconic."},
-  {name:"Granville Island Market",cat:"food",icon:"🥖",lat:49.2713,lng:-123.1340,desc:"Amazing food hall — meats, seafood, baked goods. 15 min cab."},
-  {name:"Nightingale",cat:"food",icon:"🍝",lat:49.2812,lng:-123.1179,desc:"Upscale casual, great pasta & pizza. Date night option."},
-  {name:"Medina Cafe",cat:"food",icon:"☕",lat:49.2802,lng:-123.1172,desc:"Best brunch in Vancouver. Belgian waffles. Go early."},
-  {name:"Kingyo Izakaya",cat:"food",icon:"🍶",lat:49.2847,lng:-123.1309,desc:"Japanese tapas, great cocktails. Fun evening spot."},
-  // Sights & Activities
-  {name:"Stanley Park Seawall",cat:"sights",icon:"🌲",lat:49.2990,lng:-123.1410,desc:"Iconic waterfront walk. 15 min from hotel. Stunning."},
-  {name:"English Bay Beach",cat:"sights",icon:"🏖️",lat:49.2863,lng:-123.1435,desc:"Beautiful beach, sunset views. 10 min walk west."},
-  {name:"Vancouver Art Gallery",cat:"sights",icon:"🎨",lat:49.2828,lng:-123.1207,desc:"Robson Square. 5 min walk."},
-  {name:"Canada Place",cat:"sights",icon:"⛴️",lat:49.2888,lng:-123.1110,desc:"Waterfront promenade, cruise ship terminal. 10 min walk."},
-  {name:"Gastown Steam Clock",cat:"sights",icon:"⏰",lat:49.2844,lng:-123.1089,desc:"Historic neighborhood. Cool shops, cobblestone streets."},
-  {name:"FlyOver Canada",cat:"sights",icon:"🎢",lat:49.2886,lng:-123.1114,desc:"Virtual flight ride at Canada Place. Fun experience."},
-  // Shopping
-  {name:"Robson Street Shopping",cat:"shop",icon:"🛍️",lat:49.2835,lng:-123.1270,desc:"Main shopping strip. Right outside your hotel."},
-  {name:"Pacific Centre Mall",cat:"shop",icon:"🏬",lat:49.2830,lng:-123.1168,desc:"Indoor mall, Nordstrom, Holt Renfrew. 7 min walk."},
+const HOTEL = {lat:49.2827,lng:-123.1257};
+
+const cuisineColors = {
+  japanese:'#e11d48',sushi:'#e11d48',korean:'#f43f5e',taiwanese:'#fb7185',
+  seafood:'#0ea5e9',american:'#f59e0b',burger:'#f59e0b',steak_house:'#b45309',
+  italian:'#22c55e',pizza:'#22c55e',greek:'#6366f1',thai:'#a855f7',
+  malaysian:'#8b5cf6',breakfast:'#fbbf24',sandwich:'#84cc16',
+  pho:'#ef4444',vietnamese:'#ef4444',indian:'#f97316',mexican:'#eab308',
+  chinese:'#dc2626','default':'#64748b'
+};
+
+const cuisineEmoji = {
+  japanese:'🍣',sushi:'🍣',korean:'🥘',taiwanese:'🥟',
+  seafood:'🦪',american:'🍔',burger:'🍔',steak_house:'🥩',
+  italian:'🍝',pizza:'🍕',greek:'🫒',thai:'🍜',
+  malaysian:'🌶️',breakfast:'🥞',sandwich:'🥪',
+  pho:'🍲',vietnamese:'🍲',indian:'🍛',mexican:'🌮',
+  chinese:'🥡',regional:'🍽️','default':'🍽️'
+};
+
+const raw = [
+  {name:"Miku",lat:49.2876,lng:-123.1118,cuisine:"sushi",addr:"200 Granville St",note:"World-class aburi sushi. Waterfront. Joel's #1 pick."},
+  {name:"Joe Fortes",lat:49.2849,lng:-123.1246,cuisine:"seafood",addr:"777 Thurlow St",hours:"11:00-23:00",note:"Oyster bar. 2 blocks from hotel."},
+  {name:"Din Tai Fung",lat:49.2857,lng:-123.1247,cuisine:"taiwanese",addr:"1132 Alberni St",hours:"11:00-15:00, 17:00-20:30",note:"Famous dumplings. Expect a wait."},
+  {name:"The Keg",lat:49.2862,lng:-123.1242,cuisine:"steak_house",addr:"1121 Alberni St",hours:"Su-Th 15:00-23:00",note:"Reliable steakhouse."},
+  {name:"Guu Original Thurlow",lat:49.2840,lng:-123.1254,cuisine:"japanese",addr:"838 Thurlow St",hours:"11:45-00:30",note:"Japanese izakaya tapas. Fun vibe."},
+  {name:"Earls Robson",lat:49.2860,lng:-123.1264,cuisine:"american",addr:"1185 Robson St",hours:"11:00-00:00",note:"Upscale casual. Patio."},
+  {name:"Earls Hornby",lat:49.2816,lng:-123.1238,cuisine:"american",addr:"905 Hornby St",hours:"11:30-00:00"},
+  {name:"Joey Burrard",lat:49.2828,lng:-123.1231,cuisine:"regional",addr:"820 Burrard St",hours:"12:00-22:00",note:"Right by the hotel."},
+  {name:"Joey Bentall",lat:49.2867,lng:-123.1183,cuisine:"regional",addr:"507 Burrard St",hours:"11:00-00:00"},
+  {name:"Cactus Club",lat:49.2855,lng:-123.1188,cuisine:"international",addr:"588 Burrard St",note:"Solid casual dining."},
+  {name:"Red Robin",lat:49.2845,lng:-123.1253,cuisine:"burger",addr:"803 Thurlow St",hours:"11:00-23:00"},
+  {name:"Ramen Danbo",lat:49.2831,lng:-123.1218,cuisine:"japanese",addr:"Robson St",note:"Legit Fukuoka-style ramen."},
+  {name:"Coast Restaurant",lat:49.2847,lng:-123.1231,cuisine:"seafood",addr:"1054 Alberni St",note:"Upscale seafood."},
+  {name:"Jang Mo Jib",lat:49.2857,lng:-123.1270,cuisine:"korean",addr:"808 Bute St",hours:"12:00-00:00",note:"Korean BBQ & tapas. Great for groups."},
+  {name:"Kosoo",lat:49.2891,lng:-123.1326,cuisine:"korean",addr:"832 Cardero St"},
+  {name:"Kingyo Izakaya",lat:49.2847,lng:-123.1309,cuisine:"japanese",addr:"871 Denman St",note:"Japanese tapas, great cocktails."},
+  {name:"Stepho's Greek",lat:49.2807,lng:-123.1320,cuisine:"greek",addr:"1124 Davie St",hours:"11:30-23:30",note:"Huge portions, cheap. Always a line."},
+  {name:"Taki's Taverna",lat:49.2805,lng:-123.1317,cuisine:"greek",addr:"1106 Davie St"},
+  {name:"Thai Basil",lat:49.2803,lng:-123.1316,cuisine:"thai",addr:"1125 Thurlow St",hours:"11:30-21:30"},
+  {name:"Banana Leaf",lat:49.2799,lng:-123.1303,cuisine:"malaysian",addr:"1043 Davie St",hours:"11:30-21:30",note:"Malaysian. Great curries."},
+  {name:"Samurai Japanese",lat:49.2805,lng:-123.1317,cuisine:"japanese",addr:"1108 Davie St",hours:"11:00-23:00"},
+  {name:"Shizen Ya",lat:49.2809,lng:-123.1246,cuisine:"sushi",addr:"965 Hornby St",hours:"11:30-22:00",note:"Vegan-friendly sushi."},
+  {name:"Tokyo Joe's",lat:49.2798,lng:-123.1267,cuisine:"sushi",addr:"955 Helmcken St",hours:"11:00-19:00"},
+  {name:"Sushi Star",lat:49.2795,lng:-123.1238,cuisine:"sushi",addr:"750 Nelson St",hours:"11:30-21:00"},
+  {name:"Guu Toramasa",lat:49.2811,lng:-123.1186,cuisine:"japanese",addr:"757 Seymour St",hours:"11:30-23:00"},
+  {name:"Meat & Bread",lat:49.2872,lng:-123.1189,cuisine:"sandwich",addr:"1033 W Pender St",hours:"11:00-15:00",note:"Famous sandwiches. Quick lunch."},
+  {name:"Meat & Bread Robson",lat:49.2810,lng:-123.1190,cuisine:"sandwich",addr:"625 Robson St",hours:"11:00-15:00"},
+  {name:"Nightingale",lat:49.2812,lng:-123.1179,cuisine:"italian",addr:"1017 W Hastings St",note:"Upscale casual. Great pasta. Date night."},
+  {name:"Medina Cafe",lat:49.2802,lng:-123.1172,cuisine:"breakfast",addr:"780 Richards St",hours:"08:00-15:00",note:"Best brunch in Vancouver. Go early."},
+  {name:"The Basic",lat:49.2798,lng:-123.1299,cuisine:"breakfast",addr:"1031 Davie St",hours:"08:00-15:00"},
+  {name:"Yolks",lat:49.2787,lng:-123.1289,cuisine:"breakfast",addr:"988 Davie St",hours:"08:00-15:00"},
+  {name:"Pacifico Pizzeria",lat:49.2818,lng:-123.1240,cuisine:"pizza",addr:"970 Smithe St",hours:"11:00-23:00"},
+  {name:"Donair Drive",lat:49.2796,lng:-123.1239,cuisine:"middle_eastern",addr:"770 Nelson St",hours:"10:30-02:00",note:"Late night option."},
+  {name:"Jerusalem Shawarma",lat:49.2804,lng:-123.1186,cuisine:"middle_eastern",addr:"560 Robson St"},
+  {name:"Aladdin Cafe",lat:49.2810,lng:-123.1189,cuisine:"middle_eastern",addr:"615 Robson St"},
+  {name:"Homer St Cafe",lat:49.2784,lng:-123.1182,cuisine:"italian",addr:"898 Homer St",note:"Great brunch & dinner."},
+  {name:"Express Pho",lat:49.2879,lng:-123.1238,cuisine:"pho",addr:"570 Bute St"},
+  {name:"The Templeton",lat:49.2784,lng:-123.1245,cuisine:"american",addr:"1087 Granville St",hours:"08:30-15:00",note:"Retro diner vibes."},
+  {name:"Taylight",lat:49.2819,lng:-123.1241,cuisine:"turkish",addr:"990 Smithe St",hours:"14:00-00:00"},
+  {name:"Moulin Rouge",lat:49.2792,lng:-123.1227,cuisine:"french",addr:"998 Granville St"},
+  {name:"1931 Gallery Bistro",lat:49.2827,lng:-123.1205,cuisine:"regional",addr:"Vancouver Art Gallery",note:"Inside the gallery."},
+  {name:"Japadog",lat:49.2836,lng:-123.1240,cuisine:"japanese",addr:"Robson & Burrard",note:"Famous Japanese hot dogs. Iconic."},
 ];
 
-const catColors = {hotel:"#C2000B",food:"#f59e0b",sights:"#3b82f6",shop:"#10b981"};
-const catNames = {hotel:"🏨 Hotel",food:"🍽️ Food",sights:"🎯 Sights & Activities",shop:"🛍️ Shopping"};
+function dist(a,b){
+  const R=6371e3,d2r=Math.PI/180;
+  const dLat=(b.lat-a.lat)*d2r,dLng=(b.lng-a.lng)*d2r;
+  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*d2r)*Math.cos(b.lat*d2r)*Math.sin(dLng/2)**2;
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
 
-const map = L.map('map').setView([49.2840,-123.1250],14);
+// Add distance and filter to 10 min walk (~800m)
+const places = raw.map(p=>({...p,distance:dist(HOTEL,p)})).filter(p=>p.distance<=850).sort((a,b)=>a.distance-b.distance);
+
+// Normalize cuisines
+function normCuisine(c){
+  if(!c) return 'other';
+  const first = c.split(';')[0].split(',')[0].trim().toLowerCase();
+  if(['sushi','japanese'].includes(first)) return 'japanese';
+  if(first==='steak_house') return 'steak';
+  if(first==='regional'||first==='international') return 'american';
+  if(first==='middle_eastern') return 'middle eastern';
+  return first;
+}
+
+const cuisineCounts = {};
+places.forEach(p=>{
+  const c = normCuisine(p.cuisine);
+  cuisineCounts[c] = (cuisineCounts[c]||0)+1;
+});
+
+// Sort cuisines by count
+const cuisineList = Object.entries(cuisineCounts).sort((a,b)=>b[1]-a[1]).map(e=>e[0]);
+
+// Build map
+const map = L.map('map').setView([HOTEL.lat,HOTEL.lng],15);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  attribution:'&copy; OpenStreetMap',maxZoom:19
+  attribution:'OSM',maxZoom:19
 }).addTo(map);
 
-const markers = {};
-const cats = {};
+// Hotel marker
+L.marker([HOTEL.lat,HOTEL.lng],{icon:L.divIcon({html:'<div style="font-size:28px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.8))">🏨</div>',className:'',iconSize:[30,30],iconAnchor:[15,15]})}).addTo(map).bindPopup('<b>🏨 Sutton Place Hotel</b><br>845 Burrard St');
 
-places.forEach((p,i) => {
-  if(!cats[p.cat]) cats[p.cat]=[];
-  cats[p.cat].push(p);
+// 10 min walk radius
+L.circle([HOTEL.lat,HOTEL.lng],{radius:800,color:'#C2000B',fillColor:'#C2000B',fillOpacity:0.05,weight:1,dashArray:'5,5'}).addTo(map);
+
+// Restaurant markers
+const markers = [];
+const items = [];
+let activeFilter = 'all';
+
+places.forEach((p,i)=>{
+  const c = normCuisine(p.cuisine);
+  const color = cuisineColors[p.cuisine]||cuisineColors['default'];
+  const emoji = cuisineEmoji[p.cuisine]||cuisineEmoji['default'];
   
   const icon = L.divIcon({
-    html:`<div style="font-size:24px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">${p.icon}</div>`,
-    className:'',iconSize:[30,30],iconAnchor:[15,15]
+    html:`<div style="font-size:20px;filter:drop-shadow(0 1px 3px rgba(0,0,0,.6))">${emoji}</div>`,
+    className:'',iconSize:[24,24],iconAnchor:[12,12]
   });
   
   const marker = L.marker([p.lat,p.lng],{icon}).addTo(map);
-  marker.bindPopup(`<b>${p.icon} ${p.name}</b><br><span style="font-size:12px;color:#666">${p.desc}</span>`);
-  markers[i] = marker;
+  const walkMin = Math.round(p.distance/80);
+  let popup = `<b>${emoji} ${p.name}</b><br><span style="color:#888;font-size:12px">${c} · ${walkMin} min walk</span>`;
+  if(p.addr) popup += `<br><span style="font-size:11px">${p.addr}</span>`;
+  if(p.hours) popup += `<br><span style="font-size:11px">🕐 ${p.hours}</span>`;
+  if(p.note) popup += `<br><span style="font-size:12px;color:#f59e0b">⭐ ${p.note}</span>`;
+  marker.bindPopup(popup);
+  markers.push({marker,cuisine:c});
+  
+  // List item
+  const div = document.createElement('div');
+  div.className = 'item';
+  div.dataset.cuisine = c;
+  const walkText = walkMin <= 1 ? '1 min' : `${walkMin} min`;
+  div.innerHTML = `<div class="left"><div class="name">${emoji} ${p.name}</div><div class="meta"><span class="cuisine-tag" style="background:${color}22;color:${color}">${c}</span>${p.note||p.addr||''}</div></div><div class="dist">🚶 ${walkText}</div>`;
+  div.onclick = () => { map.setView([p.lat,p.lng],17); marker.openPopup(); window.scrollTo({top:0,behavior:'smooth'}); };
+  items.push({div,cuisine:c});
+  document.getElementById('list').appendChild(div);
 });
 
-const legend = document.getElementById('legend');
-let idx = 0;
-for(const [cat, items] of Object.entries(cats)){
-  const div = document.createElement('div');
-  div.className = 'cat';
-  div.innerHTML = `<h3>${catNames[cat]}</h3>`;
-  items.forEach(p => {
-    const globalIdx = places.indexOf(p);
-    const spot = document.createElement('div');
-    spot.className = 'spot';
-    spot.dataset.cat = cat;
-    spot.innerHTML = `<div class="name">${p.icon} ${p.name}</div><div class="desc">${p.desc}</div>`;
-    spot.onclick = () => {
-      map.setView([p.lat,p.lng],16);
-      markers[globalIdx].openPopup();
-    };
-    div.appendChild(spot);
+// Build filter buttons
+const filtersEl = document.getElementById('filters');
+const allBtn = document.createElement('div');
+allBtn.className = 'fbtn active';
+allBtn.innerHTML = `All<span class="count">${places.length}</span>`;
+allBtn.onclick = () => setFilter('all');
+filtersEl.appendChild(allBtn);
+
+cuisineList.forEach(c=>{
+  const btn = document.createElement('div');
+  btn.className = 'fbtn';
+  btn.dataset.cuisine = c;
+  const emoji = cuisineEmoji[c]||'🍽️';
+  btn.innerHTML = `${emoji} ${c}<span class="count">${cuisineCounts[c]}</span>`;
+  btn.onclick = () => setFilter(c);
+  filtersEl.appendChild(btn);
+});
+
+function setFilter(cuisine){
+  activeFilter = cuisine;
+  document.querySelectorAll('.fbtn').forEach(b=>{
+    b.classList.toggle('active', cuisine==='all' ? !b.dataset.cuisine : b.dataset.cuisine===cuisine);
   });
-  legend.appendChild(div);
+  if(cuisine==='all') allBtn.classList.add('active');
+  
+  items.forEach(({div,cuisine:c})=>{
+    div.classList.toggle('hidden', cuisine!=='all' && c!==cuisine);
+  });
+  markers.forEach(({marker,cuisine:c})=>{
+    if(cuisine==='all'||c===cuisine) marker.addTo(map);
+    else map.removeLayer(marker);
+  });
 }
 </script>
 </body>
