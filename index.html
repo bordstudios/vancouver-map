@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joel & Lena — Vancouver Feb 20-22</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;background:#0a0a0f;color:#fff}
+#map{width:100%;height:60vh}
+.header{padding:16px;background:#111;border-bottom:2px solid #C2000B}
+.header h1{font-size:20px;font-weight:700}
+.header p{font-size:13px;color:#888;margin-top:4px}
+.legend{padding:16px;max-height:40vh;overflow-y:auto}
+.cat{margin-bottom:16px}
+.cat h3{font-size:14px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.spot{padding:8px 12px;margin-bottom:6px;background:#1a1a2e;border-radius:8px;font-size:13px;cursor:pointer;border-left:3px solid transparent}
+.spot:hover{background:#222240}
+.spot .name{font-weight:600}
+.spot .desc{color:#aaa;font-size:12px;margin-top:2px}
+.spot[data-cat="hotel"]{border-left-color:#C2000B}
+.spot[data-cat="food"]{border-left-color:#f59e0b}
+.spot[data-cat="sights"]{border-left-color:#3b82f6}
+.spot[data-cat="shop"]{border-left-color:#10b981}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🗺️ Joel & Lena — Vancouver</h1>
+  <p>Feb 20–22, 2026 • Sutton Place Hotel</p>
+</div>
+<div id="map"></div>
+<div class="legend" id="legend"></div>
+
+<script>
+const places = [
+  // Hotel
+  {name:"Sutton Place Hotel",cat:"hotel",icon:"🏨",lat:49.2827,lng:-123.1257,desc:"Your home base — 845 Burrard St. Check-in 4 PM"},
+  // Food — Joel's picks
+  {name:"Miku Vancouver",cat:"food",icon:"🍣",lat:49.2876,lng:-123.1118,desc:"World-class aburi sushi, waterfront views. THE move for sushi."},
+  {name:"Joe Fortes",cat:"food",icon:"🦪",lat:49.2838,lng:-123.1234,desc:"Seafood & oyster bar. 2 blocks from hotel. Great vibe."},
+  {name:"Ramen Danbo",cat:"food",icon:"🍜",lat:49.2831,lng:-123.1218,desc:"Legit Fukuoka-style ramen on Robson."},
+  {name:"Japadog",cat:"food",icon:"🌭",lat:49.2836,lng:-123.1240,desc:"Famous Japanese hot dogs. Quick, cheap, iconic."},
+  {name:"Granville Island Market",cat:"food",icon:"🥖",lat:49.2713,lng:-123.1340,desc:"Amazing food hall — meats, seafood, baked goods. 15 min cab."},
+  {name:"Nightingale",cat:"food",icon:"🍝",lat:49.2812,lng:-123.1179,desc:"Upscale casual, great pasta & pizza. Date night option."},
+  {name:"Medina Cafe",cat:"food",icon:"☕",lat:49.2802,lng:-123.1172,desc:"Best brunch in Vancouver. Belgian waffles. Go early."},
+  {name:"Kingyo Izakaya",cat:"food",icon:"🍶",lat:49.2847,lng:-123.1309,desc:"Japanese tapas, great cocktails. Fun evening spot."},
+  // Sights & Activities
+  {name:"Stanley Park Seawall",cat:"sights",icon:"🌲",lat:49.2990,lng:-123.1410,desc:"Iconic waterfront walk. 15 min from hotel. Stunning."},
+  {name:"English Bay Beach",cat:"sights",icon:"🏖️",lat:49.2863,lng:-123.1435,desc:"Beautiful beach, sunset views. 10 min walk west."},
+  {name:"Vancouver Art Gallery",cat:"sights",icon:"🎨",lat:49.2828,lng:-123.1207,desc:"Robson Square. 5 min walk."},
+  {name:"Canada Place",cat:"sights",icon:"⛴️",lat:49.2888,lng:-123.1110,desc:"Waterfront promenade, cruise ship terminal. 10 min walk."},
+  {name:"Gastown Steam Clock",cat:"sights",icon:"⏰",lat:49.2844,lng:-123.1089,desc:"Historic neighborhood. Cool shops, cobblestone streets."},
+  {name:"FlyOver Canada",cat:"sights",icon:"🎢",lat:49.2886,lng:-123.1114,desc:"Virtual flight ride at Canada Place. Fun experience."},
+  // Shopping
+  {name:"Robson Street Shopping",cat:"shop",icon:"🛍️",lat:49.2835,lng:-123.1270,desc:"Main shopping strip. Right outside your hotel."},
+  {name:"Pacific Centre Mall",cat:"shop",icon:"🏬",lat:49.2830,lng:-123.1168,desc:"Indoor mall, Nordstrom, Holt Renfrew. 7 min walk."},
+];
+
+const catColors = {hotel:"#C2000B",food:"#f59e0b",sights:"#3b82f6",shop:"#10b981"};
+const catNames = {hotel:"🏨 Hotel",food:"🍽️ Food",sights:"🎯 Sights & Activities",shop:"🛍️ Shopping"};
+
+const map = L.map('map').setView([49.2840,-123.1250],14);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
+  attribution:'&copy; OpenStreetMap',maxZoom:19
+}).addTo(map);
+
+const markers = {};
+const cats = {};
+
+places.forEach((p,i) => {
+  if(!cats[p.cat]) cats[p.cat]=[];
+  cats[p.cat].push(p);
+  
+  const icon = L.divIcon({
+    html:`<div style="font-size:24px;text-align:center;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5))">${p.icon}</div>`,
+    className:'',iconSize:[30,30],iconAnchor:[15,15]
+  });
+  
+  const marker = L.marker([p.lat,p.lng],{icon}).addTo(map);
+  marker.bindPopup(`<b>${p.icon} ${p.name}</b><br><span style="font-size:12px;color:#666">${p.desc}</span>`);
+  markers[i] = marker;
+});
+
+const legend = document.getElementById('legend');
+let idx = 0;
+for(const [cat, items] of Object.entries(cats)){
+  const div = document.createElement('div');
+  div.className = 'cat';
+  div.innerHTML = `<h3>${catNames[cat]}</h3>`;
+  items.forEach(p => {
+    const globalIdx = places.indexOf(p);
+    const spot = document.createElement('div');
+    spot.className = 'spot';
+    spot.dataset.cat = cat;
+    spot.innerHTML = `<div class="name">${p.icon} ${p.name}</div><div class="desc">${p.desc}</div>`;
+    spot.onclick = () => {
+      map.setView([p.lat,p.lng],16);
+      markers[globalIdx].openPopup();
+    };
+    div.appendChild(spot);
+  });
+  legend.appendChild(div);
+}
+</script>
+</body>
+</html>
